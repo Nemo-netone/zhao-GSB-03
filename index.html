@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块依赖分析器 · SCC 分层 / 环检测</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">⌗</span>
+    <div>
+      <h1>模块依赖分析器</h1>
+      <p class="sub">脏文本归一 · 强连通分量 · 环枚举（Johnson）· 最长路径分层 · 传递闭包高亮</p>
+    </div>
+  </div>
+  <div class="actions">
+    <button id="btn-analyze" class="primary">分析</button>
+    <button id="btn-load-sample">载入示例</button>
+    <button id="btn-clear">清空</button>
+    <button id="btn-selftest" class="ghost">运行自测</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="pane pane-left">
+    <div class="pane-head">
+      <h2>依赖清单</h2>
+      <span id="drop-hint" class="hint">粘贴文本，或把 .txt 文件拖进来</span>
+    </div>
+    <textarea id="input" spellcheck="false" placeholder="一行一条，例如：&#10;app -&gt; router&#10;app =&gt; store, config&#10;# 这是注释&#10;router depends on api&#10;store --&gt; api&#10;api -&gt; http, &quot;http v2&quot;&#10;http -&gt; logger"></textarea>
+    <div id="drop-overlay" class="drop-overlay hidden">松开以读取文件</div>
+    <div class="pane-foot">
+      <span class="hint">支持 <code>-&gt;</code> <code>=&gt;</code> <code>--&gt;</code> <code>→</code> <code>⟶</code> <code>depends on</code> <code>:</code>；目标可用 <code>,</code> <code>;</code> 分隔；支持 <code>#</code> <code>//</code> <code>--</code> 注释与单/双引号。</span>
+    </div>
+  </section>
+
+  <section class="pane pane-right">
+    <div class="pane-head">
+      <h2>分析结果</h2>
+      <div id="stats" class="stats"></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="tab-graph">依赖图</button>
+      <button class="tab" data-tab="tab-topo">拓扑顺序</button>
+      <button class="tab" data-tab="tab-cycles">环清单</button>
+      <button class="tab" data-tab="tab-isolates">孤立模块</button>
+      <button class="tab" data-tab="tab-test">自测</button>
+    </div>
+
+    <div id="tab-graph" class="tab-panel active">
+      <div id="graph-wrap" class="graph-wrap">
+        <div id="graph-empty" class="empty-hint">在左侧输入依赖清单，点「分析」后这里画分层图。<br>被依赖的模块在上层，依赖别人的在下层。</div>
+        <div id="graph-canvas"></div>
+      </div>
+      <div id="selection-info" class="selection-info">
+        <span class="hint">点击任意模块：高亮它的全部传递上游（谁牵连它）与传递下游（它牵连谁）；点击虚线组标题查看组内环路径。</span>
+      </div>
+      <div id="cycle-pop" class="cycle-pop hidden">
+        <div class="cycle-pop-head">
+          <strong id="cycle-pop-title">循环组</strong>
+          <button id="cycle-pop-close">×</button>
+        </div>
+        <div id="cycle-pop-body" class="cycle-pop-body"></div>
+      </div>
+    </div>
+
+    <div id="tab-topo" class="tab-panel">
+      <div id="topo-list" class="topo-list"><div class="empty-hint">暂无结果</div></div>
+    </div>
+
+    <div id="tab-cycles" class="tab-panel">
+      <div id="cycle-list" class="cycle-list"><div class="empty-hint">暂无结果</div></div>
+    </div>
+
+    <div id="tab-isolates" class="tab-panel">
+      <div id="isolate-list" class="isolate-list"><div class="empty-hint">暂无结果</div></div>
+    </div>
+
+    <div id="tab-test" class="tab-panel">
+      <div class="test-toolbar">
+        <button id="btn-rerun-test">重新运行自测</button>
+        <span id="test-summary" class="hint"></span>
+      </div>
+      <div id="test-output" class="test-output"><div class="empty-hint">点右上角「运行自测」开始。至少 15 条断言，逐条列出通过/失败。</div></div>
+    </div>
+  </section>
+</main>
+
+<script src="js/parser.js"></script>
+<script src="js/scc.js"></script>
+<script src="js/cycles.js"></script>
+<script src="js/layering.js"></script>
+<script src="js/selftest.js"></script>
+<script src="js/graph.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
