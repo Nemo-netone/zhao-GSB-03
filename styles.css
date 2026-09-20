@@ -1,0 +1,156 @@
+:root {
+  --bg: #0d1117;
+  --panel: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --up: #f0883e;
+  --down: #3fb950;
+  --self: #f778ba;
+  --cycle: #d2a8ff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+  font-size: 14px;
+}
+header { padding: 16px 24px 8px; }
+header h1 { margin: 0; font-size: 20px; }
+header .sub { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+main {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 16px;
+  padding: 12px 24px 24px;
+  align-items: start;
+}
+#input-panel, #output-panel { min-width: 0; }
+.toolbar { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+button {
+  background: #21262d;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 13px;
+}
+button:hover { border-color: var(--accent); }
+button.primary { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+button.primary:hover { background: #388bfd; }
+#input {
+  width: 100%;
+  height: 420px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+  resize: vertical;
+}
+#input.dragover { border-color: var(--accent); border-style: dashed; }
+#drop-hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+#stats {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+#stats b { color: var(--text); }
+#graph-wrap {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+#graph { display: block; width: 100%; height: 560px; cursor: grab; }
+#graph.panning { cursor: grabbing; }
+#graph-hint {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  color: var(--muted);
+  font-size: 11px;
+  pointer-events: none;
+  background: rgba(13,17,23,.7);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.lists > div {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  max-height: 340px;
+  overflow: auto;
+}
+.lists h2 { margin: 0 0 8px; font-size: 14px; }
+.lists ol, .lists ul { margin: 0; padding-left: 22px; }
+.lists li { margin: 3px 0; font-size: 12.5px; font-family: Consolas, monospace; }
+#cycle-list li { cursor: pointer; }
+#cycle-list li:hover { color: var(--cycle); }
+#cycle-list li.active { color: var(--cycle); font-weight: bold; }
+#cycle-count { color: var(--cycle); }
+#cycle-filter {
+  font-size: 12px;
+  color: var(--cycle);
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+.topo-cycle { color: var(--cycle); }
+.more-note { color: var(--muted); font-size: 12px; margin-top: 6px; }
+.empty-note { color: var(--muted); font-size: 12.5px; }
+
+/* self test */
+#selftest-panel {
+  margin-top: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  max-height: 420px;
+  overflow: auto;
+}
+#selftest-panel h2 { margin: 0 0 8px; font-size: 14px; }
+#selftest-summary { font-size: 13px; margin-bottom: 8px; }
+#selftest-list { list-style: none; margin: 0; padding: 0; }
+#selftest-list li { margin: 4px 0; font-size: 12.5px; font-family: Consolas, monospace; }
+#selftest-list .pass { color: var(--down); }
+#selftest-list .fail { color: #f85149; }
+#selftest-list .detail { color: var(--muted); margin-left: 20px; white-space: pre-wrap; word-break: break-all; }
+.hidden { display: none; }
+
+/* SVG */
+#graph .edge { stroke: #57606a; stroke-width: 1.2; fill: none; }
+#graph .edge.dim { opacity: .08; }
+#graph .edge.e-up { stroke: var(--up); stroke-width: 2; marker-end: url(#arrow-up); }
+#graph .edge.e-down { stroke: var(--down); stroke-width: 2; marker-end: url(#arrow-down); }
+#graph .edge.e-cycle { stroke: var(--cycle); stroke-width: 2.2; marker-end: url(#arrow-cycle); }
+#graph .node { cursor: pointer; }
+#graph .node rect { fill: #21262d; stroke: #4b5563; stroke-width: 1; }
+#graph .node text { fill: var(--text); font-size: 12px; font-family: Consolas, "Microsoft YaHei", monospace; }
+#graph .node.dim { opacity: .12; }
+#graph .node.hl-self rect { stroke: var(--self); stroke-width: 2.5; fill: #3d2333; }
+#graph .node.hl-up rect { stroke: var(--up); stroke-width: 2; fill: #3a2a1a; }
+#graph .node.hl-down rect { stroke: var(--down); stroke-width: 2; fill: #17351f; }
+#graph .node.hl-cycle rect { stroke: var(--cycle); stroke-width: 2.5; fill: #2d2440; }
+#graph .comp-box { fill: rgba(210,168,255,.05); stroke: var(--cycle); stroke-width: 1.2; stroke-dasharray: 6 4; cursor: pointer; }
+#graph .comp-label { fill: var(--cycle); font-size: 11px; font-family: "Microsoft YaHei", sans-serif; cursor: pointer; }
+#graph .iso-label { fill: var(--muted); font-size: 12px; }
+#graph .iso-box { fill: none; stroke: var(--border); stroke-dasharray: 4 4; }
